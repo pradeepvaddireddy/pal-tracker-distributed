@@ -1,5 +1,6 @@
 package io.pivotal.pal.tracker.timesheets;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.web.client.RestOperations;
 
 public class ProjectClient {
@@ -11,7 +12,7 @@ public class ProjectClient {
         this.restOperations = restOperations;
         this.endpoint = registrationServerEndpoint;
     }
-
+    @HystrixCommand(fallbackMethod = "getProjectFromCache")
     public ProjectInfo getProject(long projectId) {
         return restOperations.getForObject(endpoint + "/projects/" + projectId, ProjectInfo.class);
     }
